@@ -1,0 +1,8 @@
+{
+  "stocks": [
+    {"name": "AAPL", "price": 150.0, "mu": 0.0002, "sigma": 0.01},
+    {"name": "TSLA", "price": 220.0, "mu": 0.0004, "sigma": 0.015}
+  ],
+  "timestep_minutes": 1,
+  "duration_minutes": 390
+}

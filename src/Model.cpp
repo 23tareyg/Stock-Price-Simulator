@@ -16,7 +16,7 @@ void GBMModel::simulate(std::mt19937 mt) {
 
     for (int i = 0; i < iteration; i++) {
         stock->price = stock->price * std::exp(stock->mu - (0.5 * stock->sigma * stock->sigma) * dt + stock->sigma * std::sqrt(dt) * Z);
-        currTime += std::chrono::minutes(timestep_minutes);
+        currTime += std::chrono::minutes(static_cast<int>(timestep_minutes));
         stockData.push_back({currTime, stock->price});
     }
 }

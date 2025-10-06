@@ -1,19 +1,24 @@
 #include "Model.hpp"
 
-double PriceModel::step(const double price, const double mu, const double sigma, double dt, std::mt19937& mt) {
-    std::normal_distribution<double> dist{0.0, 1.0};
-    double Z = dist(mt);
-    double ans = price * std::exp(mu - (0.5 * sigma * sigma) * dt + sigma * std::sqrt(dt) * Z);
-    return ans;
-}
-
 PriceModel::~PriceModel() = default;
 
-double GBMModel::step(const double price, const double mu, const double sigma, double dt, std::mt19937& mt) {
+GBMModel::GBMModel(std::shared_ptr<Stock> s, int dur_min, int time_min)
+    : stock(s), duration_minutes(dur_min), timestep_minutes(time_min)
+{
+    currTime = std::chrono::system_clock::now();
+}
+
+void GBMModel::simulate(std::mt19937 mt) {
     std::normal_distribution<double> dist{0.0, 1.0};
     double Z = dist(mt);
-    double ans = price * std::exp(mu - (0.5 * sigma * sigma) * dt + sigma * std::sqrt(dt) * Z);
-    return ans;
+    int iteration = static_cast<int>(duration_minutes / timestep_minutes);
+    double dt = timestep_minutes / (252 * 6.5 * 60); // normalizing dt for number of trading minutes there are in a year
+
+    for (int i = 0; i < iteration; i++) {
+        stock->price = stock->price * std::exp(stock->mu - (0.5 * stock->sigma * stock->sigma) * dt + stock->sigma * std::sqrt(dt) * Z);
+        currTime += std::chrono::minutes(timestep_minutes);
+        stockData.push_back({currTime, stock->price});
+    }
 }
 
 GBMModel::~GBMModel() = default;

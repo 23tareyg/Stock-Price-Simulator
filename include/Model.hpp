@@ -1,16 +1,60 @@
 #pragma once
 #include <random>
 #include <cmath>
+#include <chrono>
 #include "Stock.hpp"
 
+using StockTime = std::chrono::time_point<std::chrono::system_clock>;
+
 class PriceModel {
+protected:
+    std::vector<std::pair<double, double>> data;
 public:
-    virtual double step(const double price, const double mu, const double sigma, double dt, std::mt19937& mt);
     virtual ~PriceModel();
 };
 
+/*
+usage:
+i initialize a GBMModel with a stock, a duration, and a timestep, or perhaps neither
+I can select some different durations, stocks, and timesteps from the dropdown
+I click "run" and it simulates the stock from the model, storing the value and the datetime in a vector<pair<date, double>>
+Simulation calculates formula and then stores the date and the double in the vector pair
+Updates the date by incrementing it by timestep, and updates the stock.price by setting it equal to whatever the formula just outputted, and updates duration/timestep
+repeats while duration/timestep > 0
+*/
 class GBMModel : PriceModel{
+private:
+    std::shared_ptr<Stock> stock;
+    int duration_minutes;
+    int timestep_minutes;
+
+    std::vector<std::pair<StockTime, double>> stockData;
+    StockTime currTime;
 public:
-    double step(const double price, const double mu, const double sigma, double dt, std::mt19937& mt);
+    GBMModel(std::shared_ptr<Stock> s, int dur_min, int time_min);
+    virtual void simulate(std::mt19937 mt);
     virtual ~GBMModel();
 };
+
+/*
+
+    for (int i = 0; i < (*stocks).size(); i++) {
+        int temp = duration;
+        GBMModel model;
+        int step = 0;
+        while (temp > 0) {
+            double calc = model.step(stocks->at(i).price, stocks->at(i).mu, stocks->at(i).sigma, dt, prng);
+            res[i][step] = calc;
+            stocks->at(i).price = calc;
+            step++;
+            temp -= timestep;
+        }
+    }
+
+    for(auto i : res) {
+        std::cout << "Stock 1:\n";
+        for (auto j : i) {
+            std::cout << j << ',' << '\n';
+        }
+    }
+*/

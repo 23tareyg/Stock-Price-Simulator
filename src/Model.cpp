@@ -21,4 +21,12 @@ void GBMModel::simulate(std::mt19937 mt) {
     }
 }
 
+void GBMModel::print_data() {
+    for (auto& i : stockData) {
+        std::time_t time = std::chrono::system_clock::to_time_t(i.first);
+        std::tm* tm_ptr = std::localtime(&time);
+        std::cout << "At " << std::put_time(tm_ptr, "%H:%M") << " the price was " << i.second << '\n';
+    }
+}
+
 GBMModel::~GBMModel() = default;

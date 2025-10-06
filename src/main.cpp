@@ -20,6 +20,7 @@ int main() {
 
     GBMModel model(test_stock, duration, timestep);
     model.simulate(prng);
+    model.print_data();
 
 
     return 0;

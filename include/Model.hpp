@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <random>
 #include <cmath>
 #include <chrono>
@@ -8,7 +9,7 @@ using StockTime = std::chrono::time_point<std::chrono::system_clock>;
 
 class PriceModel {
 protected:
-    std::vector<std::pair<double, double>> data;
+    std::vector<std::pair<StockTime, double>> stockData;
 public:
     virtual ~PriceModel();
 };
@@ -28,11 +29,11 @@ private:
     int duration_minutes;
     int timestep_minutes;
 
-    std::vector<std::pair<StockTime, double>> stockData;
     StockTime currTime;
 public:
     GBMModel(std::shared_ptr<Stock> s, int dur_min, int time_min);
     virtual void simulate(std::mt19937 mt);
+    void print_data();
     virtual ~GBMModel();
 };
 

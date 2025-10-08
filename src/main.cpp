@@ -14,7 +14,7 @@ int main() {
     json data = json::parse(f);
 
     std::mt19937 prng;
-    std::shared_ptr<Stock> test_stock = std::make_shared<Stock>(data["stocks"][0]);
+    std::shared_ptr<Stock> test_stock = std::make_shared<Stock>(data["stocks"][1]);
     int duration = static_cast<int>(data["duration_minutes"]);
     int timestep = static_cast<int>(data["timestep_minutes"]);
 

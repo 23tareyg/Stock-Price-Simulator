@@ -36,26 +36,3 @@ public:
     void print_data();
     virtual ~GBMModel();
 };
-
-/*
-
-    for (int i = 0; i < (*stocks).size(); i++) {
-        int temp = duration;
-        GBMModel model;
-        int step = 0;
-        while (temp > 0) {
-            double calc = model.step(stocks->at(i).price, stocks->at(i).mu, stocks->at(i).sigma, dt, prng);
-            res[i][step] = calc;
-            stocks->at(i).price = calc;
-            step++;
-            temp -= timestep;
-        }
-    }
-
-    for(auto i : res) {
-        std::cout << "Stock 1:\n";
-        for (auto j : i) {
-            std::cout << j << ',' << '\n';
-        }
-    }
-*/

@@ -10,12 +10,12 @@ GBMModel::GBMModel(std::shared_ptr<Stock> s, int dur_min, int time_min)
 
 void GBMModel::simulate(std::mt19937 mt) {
     std::normal_distribution<double> dist{0.0, 1.0};
-    double Z = dist(mt);
     int iteration = static_cast<int>(duration_minutes / timestep_minutes);
     double dt = timestep_minutes / (252 * 6.5 * 60); // normalizing dt for number of trading minutes there are in a year
 
     for (int i = 0; i < iteration; i++) {
-        stock->price = stock->price * std::exp(stock->mu - (0.5 * stock->sigma * stock->sigma) * dt + stock->sigma * std::sqrt(dt) * Z);
+        double Z = dist(mt);
+        stock->price = stock->price * std::exp((stock->mu - (0.5 * stock->sigma * stock->sigma)) * dt + (stock->sigma * std::sqrt(dt) * Z));
         currTime += std::chrono::minutes(static_cast<int>(timestep_minutes));
         stockData.push_back({currTime, stock->price});
     }

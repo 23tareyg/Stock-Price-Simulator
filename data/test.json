@@ -4,5 +4,5 @@
     {"name": "TSLA", "price": 220.0, "mu": 0.0004, "sigma": 0.15}
   ],
   "timestep_minutes": 1,
-  "duration_minutes": 390
+  "duration_minutes": 3000
 }

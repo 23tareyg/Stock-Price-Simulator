@@ -16,7 +16,8 @@ int main() {
     std::ifstream f("../data/test.json");
     json data = json::parse(f);
 
-    std::mt19937 prng;
+    unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
+    std::mt19937 prng(seed1);
     std::shared_ptr<Stock> test_stock = std::make_shared<Stock>(data["stocks"][0]);
     int duration = static_cast<int>(data["duration_minutes"]);
     int timestep = static_cast<int>(data["timestep_minutes"]);

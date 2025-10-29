@@ -32,7 +32,7 @@ private:
     StockTime currTime;
 public:
     GBMModel(std::shared_ptr<Stock> s, int dur_min, int time_min);
-    virtual void simulate(std::mt19937 mt);
+    virtual void simulate(std::mt19937& mt);
     void print_data();
     virtual ~GBMModel();
 };

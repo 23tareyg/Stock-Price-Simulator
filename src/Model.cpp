@@ -8,7 +8,7 @@ GBMModel::GBMModel(std::shared_ptr<Stock> s, int dur_min, int time_min)
     currTime = std::chrono::system_clock::now();
 }
 
-void GBMModel::simulate(std::mt19937 mt) {
+void GBMModel::simulate(std::mt19937& mt) {
     std::normal_distribution<double> dist{0.0, 1.0};
     int iteration = static_cast<int>(duration_minutes / timestep_minutes);
     double dt = timestep_minutes / (252 * 6.5 * 60); // normalizing dt for number of trading minutes there are in a year

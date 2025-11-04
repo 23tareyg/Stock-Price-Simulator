@@ -10,7 +10,12 @@ using StockTime = std::chrono::time_point<std::chrono::system_clock>;
 class PriceModel {
 protected:
     std::vector<std::pair<StockTime, double>> stockData;
+    StockTime currTime;
 public:
+    // define a pure virtual "simulate" function to prevent runtime problems
+    virtual void simulate(std::mt19937& mt) = 0;
+    virtual void print_data();
+    virtual void reset();
     virtual ~PriceModel();
 };
 
@@ -29,10 +34,9 @@ private:
     int duration_minutes;
     int timestep_minutes;
 
-    StockTime currTime;
 public:
     GBMModel(std::shared_ptr<Stock> s, int dur_min, int time_min);
-    virtual void simulate(std::mt19937& mt);
+    void simulate (std::mt19937& mt);
     void print_data();
     virtual ~GBMModel();
 };

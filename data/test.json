@@ -3,6 +3,6 @@
     {"name": "AAPL", "price": 150.0, "mu": 0.0002, "sigma": 0.2},
     {"name": "TSLA", "price": 220.0, "mu": 0.0004, "sigma": 0.15}
   ],
-  "timestep_minutes": 1,
-  "duration_minutes": 100
+  "timestep_minutes": 10,
+  "duration_minutes": 500
 }

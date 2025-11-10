@@ -21,9 +21,13 @@ int main() {
     int duration = static_cast<int>(data["duration_minutes"]);
     int timestep = static_cast<int>(data["timestep_minutes"]);
 
-    GBMModel model(test_stock, duration, timestep);
-    model.simulate(prng);
-    model.print_data();
+    GBMModel model1(test_stock, duration, timestep);
+    model1.simulate(prng);
+    model1.print_data();
+    
+    ABMModel model2(test_stock, duration, timestep);
+    model2.simulate(prng);
+    model2.print_data();
 
 
     return 0;

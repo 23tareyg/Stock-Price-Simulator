@@ -3,6 +3,9 @@
 #include <random>
 #include <cmath>
 #include <chrono>
+#include <stdexcept>
+#include <memory>
+
 #include "Stock.hpp"
 
 using StockTime = std::chrono::time_point<std::chrono::system_clock>;
@@ -12,9 +15,11 @@ protected:
     std::vector<std::pair<StockTime, double>> stockData;
     StockTime currTime;
 public:
-    // define a pure virtual "simulate" function to prevent runtime problems
+    // define a pure virtual "simulate" function by setting to zero to prevent runtime problems
     virtual void simulate(std::mt19937& mt) = 0;
+
     virtual void print_data();
+    static std::unique_ptr<PriceModel> createModel(const std::string& type, std::shared_ptr<Stock> stock, int dur, int t);
     virtual void reset();
     virtual ~PriceModel();
 };
@@ -28,7 +33,7 @@ Simulation calculates formula and then stores the date and the double in the vec
 Updates the date by incrementing it by timestep, and updates the stock.price by setting it equal to whatever the formula just outputted, and updates duration/timestep
 repeats while duration/timestep > 0
 */
-class GBMModel : PriceModel{
+class GBMModel : public PriceModel{
 private:
     std::shared_ptr<Stock> stock;
     int duration_minutes;
@@ -39,4 +44,17 @@ public:
     void simulate (std::mt19937& mt);
     void print_data();
     virtual ~GBMModel();
+};
+
+class ABMModel : public PriceModel{
+private:
+    std::shared_ptr<Stock> stock;
+    int duration_minutes;
+    int timestep_minutes;
+
+public:
+    ABMModel(std::shared_ptr<Stock> s, int dur_min, int time_min);
+    void simulate (std::mt19937& mt);
+    void print_data();
+    virtual ~ABMModel();
 };

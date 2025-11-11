@@ -21,7 +21,7 @@ int main() {
     std::shared_ptr<Stock> test_stock = std::make_shared<Stock>(data["stocks"][0]);
     int duration = static_cast<int>(data["duration_minutes"]);
     int timestep = static_cast<int>(data["timestep_minutes"]);
-    TimeUnit t = TimeUnit::MINUTES;
+    TimeUnit t = TimeUnit::HOURS;
 
     GBMModel model1(test_stock, duration, timestep, t);
     model1.simulate(prng);

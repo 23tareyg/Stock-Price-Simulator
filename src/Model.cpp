@@ -25,7 +25,7 @@ PriceModel::~PriceModel() = default;
 
 // GBM Class
 GBMModel::GBMModel(std::shared_ptr<Stock> s, int dur_unit, int tstep, TimeUnit t) : 
-    stock(std::move(s)), duration(dur_unit), timestep(tstep) {
+    stock(std::move(s)), duration(dur_unit), timestep(tstep), unit(t) {
     switch (t) {
         case (TimeUnit::SECONDS):
             normalize = (252.0 * 6.5 * 60.0 * 60.0);
@@ -92,13 +92,13 @@ GBMModel::~GBMModel() = default;
 
 // ABM Class
 ABMModel::ABMModel(std::shared_ptr<Stock> s, int dur_unit, int tstep, TimeUnit t) 
-    : stock(std::move(s)), duration(dur_unit), timestep(tstep) {
+    : stock(std::move(s)), duration(dur_unit), timestep(tstep), unit(t) {
     switch (t) {
         case (TimeUnit::SECONDS):
             normalize = (252.0 * 6.5 * 60.0 * 60.0);
             break;
         case (TimeUnit::MINUTES):
-            normalize = (252.0 * 6.5 *60.0);
+            normalize = (252.0 * 6.5 * 60.0);
             break;
         case (TimeUnit::HOURS):
             normalize = (252.0 * 6.5);
@@ -126,6 +126,10 @@ void ABMModel::simulate(std::mt19937& mt) {
         double drift = stock->mu * dt;
         double diffusion = stock->sigma * std::sqrt(dt) * Z;
         curr_price += drift + diffusion;
+
+        if (curr_price < 0) {
+            curr_price = 0.01; // min price of a stock
+        }
 
         switch(unit) {
             case TimeUnit::SECONDS:

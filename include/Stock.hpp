@@ -15,4 +15,5 @@ public:
     Stock();
     Stock(std::ifstream& f);
     Stock(const json& input);
+    void estimateParameters(std::vector<double>& prices);
 };

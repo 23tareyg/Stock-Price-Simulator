@@ -10,16 +10,24 @@
 
 using StockTime = std::chrono::time_point<std::chrono::system_clock>;
 
+// Time unit enum to handle changes in timestep
+enum class TimeUnit {
+    SECONDS,
+    MINUTES,
+    HOURS,
+    DAYS
+};
+
 class PriceModel {
 protected:
     std::vector<std::pair<StockTime, double>> stockData;
-    StockTime currTime;
+    StockTime curr_time;
 public:
     // define a pure virtual "simulate" function by setting to zero to prevent runtime problems
     virtual void simulate(std::mt19937& mt) = 0;
 
     virtual void print_data();
-    static std::unique_ptr<PriceModel> createModel(const std::string& type, std::shared_ptr<Stock> stock, int dur, int t);
+    static std::unique_ptr<PriceModel> createModel(const std::string& type, std::shared_ptr<Stock> stock, int dur, int t, TimeUnit unit);
     virtual void reset();
     virtual ~PriceModel();
 };
@@ -33,14 +41,18 @@ Simulation calculates formula and then stores the date and the double in the vec
 Updates the date by incrementing it by timestep, and updates the stock.price by setting it equal to whatever the formula just outputted, and updates duration/timestep
 repeats while duration/timestep > 0
 */
-class GBMModel : public PriceModel{
+
+
+class GBMModel : public PriceModel {
 private:
     std::shared_ptr<Stock> stock;
-    int duration_minutes;
-    int timestep_minutes;
+    int duration;
+    int timestep;
+    TimeUnit unit;
+    double normalize = 252; // standard value is days
 
 public:
-    GBMModel(std::shared_ptr<Stock> s, int dur_min, int time_min);
+    GBMModel(std::shared_ptr<Stock> s, int dur_unit, int tstep, TimeUnit t);
     void simulate (std::mt19937& mt);
     void print_data();
     virtual ~GBMModel();
@@ -49,11 +61,13 @@ public:
 class ABMModel : public PriceModel{
 private:
     std::shared_ptr<Stock> stock;
-    int duration_minutes;
-    int timestep_minutes;
+    int duration;
+    int timestep;
+    TimeUnit unit;
+    double normalize;
 
 public:
-    ABMModel(std::shared_ptr<Stock> s, int dur_min, int time_min);
+    ABMModel(std::shared_ptr<Stock> s, int dur_unit, int tstep, TimeUnit t);
     void simulate (std::mt19937& mt);
     void print_data();
     virtual ~ABMModel();

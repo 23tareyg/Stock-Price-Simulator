@@ -1,7 +1,5 @@
 #include "ParameterEst.hpp"
 
-
-
 double ParameterEstimator::computeMean(const std::vector<double>& data) const {
     if (data.empty()) throw std::invalid_argument("Data cannot be empty");
     return std::accumulate(data.begin(), data.end(), 0.0) / data.size();

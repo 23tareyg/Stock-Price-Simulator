@@ -21,22 +21,23 @@ int main() {
     std::shared_ptr<Stock> test_stock = std::make_shared<Stock>(data["stocks"][0]);
     int duration = static_cast<int>(data["duration_minutes"]);
     int timestep = static_cast<int>(data["timestep_minutes"]);
-/*
-    GBMModel model1(test_stock, duration, timestep);
+    TimeUnit t = TimeUnit::MINUTES;
+
+    GBMModel model1(test_stock, duration, timestep, t);
     model1.simulate(prng);
     model1.print_data();
     
-    ABMModel model2(test_stock, duration, timestep);
+    ABMModel model2(test_stock, duration, timestep, t);
     model2.simulate(prng);
     model2.print_data();
-*/
 
-    std::vector<double> hist_prices = {100.0, 102.5, 101.0, 105.0};  // Example data
+/*
+    std::vector<double> hist_prices = {100.0, 100.01, 100.03, 100.02};  // Example data
     ParameterEstimator estimator(hist_prices);
     std::pair<double, double> res = estimator.estimateMuSigma();
     double mu = res.first;
     double sigma = res.second;
     std::cout << mu << ", " << sigma << '\n';
-
+*/
     return 0;
 }

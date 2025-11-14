@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <filesystem>
 
 #include <nlohmann/json.hpp>
 
@@ -11,7 +12,30 @@
 
 using json = nlohmann::json;
 
+// we're trying to run multiple simulations of a model with a certain timestep
+// want to output to multiple files in file directory
+void monteCarloSim(const std::string& modelType, std::shared_ptr<Stock> stock,
+int duration, int timestep, TimeUnit t, const std::string& outputDir, int num_iterations) {
+
+    std::filesystem::create_directory(outputDir);
+
+    unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
+    std::mt19937 orig_prng(seed1);
+
+    for (int i = 1; i <= num_iterations; i++) {
+        auto prng = orig_prng;
+        prng.discard(1000); // advance engine by 1000
+
+        auto model = PriceModel::createModel(modelType, stock, duration, timestep, t);
+        model->simulate(prng);
+
+        std::string filename = outputDir + "/" + modelType + std::to_string(i) + ".csv";
+        model->exportToCSV(filename);
+    }
+}
+
 int main() {
+
     // parsing json data into data object
     std::ifstream f("../data/test.json");
     json data = json::parse(f);
@@ -23,13 +47,11 @@ int main() {
     int timestep = static_cast<int>(data["timestep_minutes"]);
     TimeUnit t = TimeUnit::HOURS;
 
-    GBMModel model1(test_stock, duration, timestep, t);
-    model1.simulate(prng);
-    model1.print_data();
-    
-    ABMModel model2(test_stock, duration, timestep, t);
-    model2.simulate(prng);
-    model2.print_data();
+    // monteCarloSim("GBM", test_stock, duration, timestep, t, "/home/tarey/dev/Projects/Stock-Price-Simulator/output", 10);
+
+    auto model = PriceModel::createModel("GBM", test_stock, duration, timestep, t);
+    model->simulate(prng);
+    model->print_data();
 
 /*
     std::vector<double> hist_prices = {100.0, 100.01, 100.03, 100.02};  // Example data

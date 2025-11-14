@@ -1,17 +1,28 @@
 #include "Model.hpp"
-
+#include <ctime>
 // Price Class
 void PriceModel::print_data() {
     for (const auto& i : stockData) {
         std::time_t time = std::chrono::system_clock::to_time_t(i.first);
         std::tm* tm_ptr = std::localtime(&time);
         std::cout << "At " << std::put_time(tm_ptr, "%H:%M") << " the price will be " << i.second << '\n';
+        //std::cout << "At " << std::ctime(&time) << " the price will be " << i.second << '\n';
     }
 }
 
 void PriceModel::reset() {
     stockData.clear();
     curr_time = std::chrono::system_clock::now();
+}
+
+void PriceModel::exportToCSV(std::string& filename) {
+    std::ofstream file(filename);
+    file << "time,price\n";
+    for (const auto& [time, price] : stockData) {
+        std::time_t time_t = std::chrono::system_clock::to_time_t(time);
+        std::tm* tm = std::localtime(&time_t);
+        file << std::put_time(tm, "%Y-%m-%d %H:%M:%S") << "," << price << '\n';
+    }
 }
 
 std::unique_ptr<PriceModel> PriceModel::createModel(const std::string& type, std::shared_ptr<Stock> stock, int dur, int t, TimeUnit unit) {
@@ -85,6 +96,7 @@ void GBMModel::print_data() {
         std::time_t time = std::chrono::system_clock::to_time_t(i.first);
         std::tm* tm_ptr = std::localtime(&time);
         std::cout << "At " << std::put_time(tm_ptr, "%H:%M") << " the price will be " << i.second << '\n';
+        // std::cout << "At " << std::ctime(&time) << " the price will be " << i.second << '\n';
     }
 }
 

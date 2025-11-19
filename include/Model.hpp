@@ -29,6 +29,8 @@ public:
     virtual void print_data();
     static std::unique_ptr<PriceModel> createModel(const std::string& type, std::shared_ptr<Stock> stock, int dur, int t, TimeUnit unit);
     virtual void reset();
+    virtual void exportToCSV(std::string& filename);
+
     virtual ~PriceModel();
 };
 

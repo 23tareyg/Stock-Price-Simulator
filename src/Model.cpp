@@ -1,17 +1,28 @@
 #include "Model.hpp"
-
+#include <ctime>
 // Price Class
 void PriceModel::print_data() {
     for (const auto& i : stockData) {
         std::time_t time = std::chrono::system_clock::to_time_t(i.first);
         std::tm* tm_ptr = std::localtime(&time);
         std::cout << "At " << std::put_time(tm_ptr, "%H:%M") << " the price will be " << i.second << '\n';
+        //std::cout << "At " << std::ctime(&time) << " the price will be " << i.second << '\n';
     }
 }
 
 void PriceModel::reset() {
     stockData.clear();
     curr_time = std::chrono::system_clock::now();
+}
+
+void PriceModel::exportToCSV(std::string& filename) {
+    std::ofstream file(filename);
+    file << "time,price\n";
+    for (const auto& [time, price] : stockData) {
+        std::time_t time_t = std::chrono::system_clock::to_time_t(time);
+        std::tm* tm = std::localtime(&time_t);
+        file << std::put_time(tm, "%Y-%m-%d %H:%M:%S") << "," << price << '\n';
+    }
 }
 
 std::unique_ptr<PriceModel> PriceModel::createModel(const std::string& type, std::shared_ptr<Stock> stock, int dur, int t, TimeUnit unit) {
@@ -25,7 +36,7 @@ PriceModel::~PriceModel() = default;
 
 // GBM Class
 GBMModel::GBMModel(std::shared_ptr<Stock> s, int dur_unit, int tstep, TimeUnit t) : 
-    stock(std::move(s)), duration(dur_unit), timestep(tstep) {
+    stock(std::move(s)), duration(dur_unit), timestep(tstep), unit(t) {
     switch (t) {
         case (TimeUnit::SECONDS):
             normalize = (252.0 * 6.5 * 60.0 * 60.0);
@@ -85,6 +96,7 @@ void GBMModel::print_data() {
         std::time_t time = std::chrono::system_clock::to_time_t(i.first);
         std::tm* tm_ptr = std::localtime(&time);
         std::cout << "At " << std::put_time(tm_ptr, "%H:%M") << " the price will be " << i.second << '\n';
+        // std::cout << "At " << std::ctime(&time) << " the price will be " << i.second << '\n';
     }
 }
 
@@ -92,13 +104,13 @@ GBMModel::~GBMModel() = default;
 
 // ABM Class
 ABMModel::ABMModel(std::shared_ptr<Stock> s, int dur_unit, int tstep, TimeUnit t) 
-    : stock(std::move(s)), duration(dur_unit), timestep(tstep) {
+    : stock(std::move(s)), duration(dur_unit), timestep(tstep), unit(t) {
     switch (t) {
         case (TimeUnit::SECONDS):
             normalize = (252.0 * 6.5 * 60.0 * 60.0);
             break;
         case (TimeUnit::MINUTES):
-            normalize = (252.0 * 6.5 *60.0);
+            normalize = (252.0 * 6.5 * 60.0);
             break;
         case (TimeUnit::HOURS):
             normalize = (252.0 * 6.5);
@@ -126,6 +138,10 @@ void ABMModel::simulate(std::mt19937& mt) {
         double drift = stock->mu * dt;
         double diffusion = stock->sigma * std::sqrt(dt) * Z;
         curr_price += drift + diffusion;
+
+        if (curr_price < 0) {
+            curr_price = 0.01; // min price of a stock
+        }
 
         switch(unit) {
             case TimeUnit::SECONDS:

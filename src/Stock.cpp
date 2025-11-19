@@ -2,7 +2,7 @@
 #include <ParameterEst.hpp>
 
 
-Stock::Stock() : name("N/A"), price(0.0), mu(0.0), sigma(0.0) {}
+Stock::Stock() : name("N/A"), price(-1), mu(0.0), sigma(0.0) {}
 
 Stock::Stock(const json& stock) {
     name = stock["name"];

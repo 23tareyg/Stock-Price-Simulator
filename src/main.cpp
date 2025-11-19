@@ -12,8 +12,8 @@
 
 using json = nlohmann::json;
 
-// we're trying to run multiple simulations of a model with a certain timestep
-// want to output to multiple files in file directory
+// Takes a model and runs Monte Carlo simulation with variable iterations
+// writes csv to specified directory
 void monteCarloSim(const std::string& modelType, std::shared_ptr<Stock> stock,
 int duration, int timestep, TimeUnit t, const std::string& outputDir, int num_iterations) {
 
@@ -47,19 +47,19 @@ int main() {
     int timestep = static_cast<int>(data["timestep_minutes"]);
     TimeUnit t = TimeUnit::HOURS;
 
-    // monteCarloSim("GBM", test_stock, duration, timestep, t, "/home/tarey/dev/Projects/Stock-Price-Simulator/output", 10);
+    monteCarloSim("GBM", test_stock, duration, timestep, t, "../output/GBM", 10);
 
-    auto model = PriceModel::createModel("GBM", test_stock, duration, timestep, t);
+    /*auto model = PriceModel::createModel("GBM", test_stock, duration, timestep, t);
     model->simulate(prng);
-    model->print_data();
+    model->print_data();*/
 
-/*
+
     std::vector<double> hist_prices = {100.0, 100.01, 100.03, 100.02};  // Example data
     ParameterEstimator estimator(hist_prices);
     std::pair<double, double> res = estimator.estimateMuSigma();
     double mu = res.first;
     double sigma = res.second;
     std::cout << mu << ", " << sigma << '\n';
-*/
+
     return 0;
 }

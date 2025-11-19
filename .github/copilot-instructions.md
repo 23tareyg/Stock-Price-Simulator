@@ -5,7 +5,7 @@ Keep this file short (20-50 lines). Update when project layout or build changes.
 
 # Quick orientation for automated coding agents
 
-This repository is a small C++ stock-price simulator (CMake + single executable). Below are the essential facts, conventions, and runnable examples an AI agent needs to be productive.
+This repository is a small C++ stock-price simulator (CMake + single executable) with a lightweight Python visualization helper. Below are the essential facts, conventions, and runnable examples an AI agent needs to be productive.
 
 ## Quick start (build & run)
 - From project root: configure and build with CMake
@@ -17,11 +17,18 @@ cmake --build build --config Release -j
 cd build && ./StockPriceSimulator
 ```
 
+Optional: visualize results using the Python helper (reads files under `output/`):
+
+```sh
+python3 python/datavis.py
+```
+
 Note: a built binary has been observed in `build/StockPriceSimulator` (sometimes `build/bin/StockPriceSimulator` depending on generator).
 
 ## Big-picture architecture
-- Single executable: `StockPriceSimulator` (sources under `src/`, headers under `include/`).
+- Single executable: `StockPriceSimulator` (sources under `src/`, headers under `include/`) performs the backend simulation and writes results to `output/`.
 - Data input: `src/main.cpp` reads `../data/test.json` at runtime (so run the binary from `build/` or adapt the path).
+- Visualization: `python/datavis.py` provides quick plotting using standard Python libraries (matplotlib, pandas). It reads the simulator output in `output/` and produces plots.
 - Core components:
   - `PriceModel` (abstract base) — defined in `include/Model.hpp`, implemented in `src/Model.cpp`.
     - Concrete models: `GBMModel` and `ABMModel` (both store `stockData` as `vector<pair<StockTime,double>>`).
@@ -47,6 +54,7 @@ Note: a built binary has been observed in `build/StockPriceSimulator` (sometimes
 ## Where to make common edits
 - Add new models: implement a class deriving from `PriceModel` (update `createModel` in `src/Model.cpp`).
 - Add CLI or config: modify `src/main.cpp` to accept a path/seed/flags rather than hard-coded `../data/test.json` and PRNG seed.
+- Visualization: add or update `python/datavis.py` (or Jupyter notebooks under `python/`) to consume files from `output/` and produce plots.
 - Tests: there are no unit tests. Prefer small, header-only test harnesses (Catch2) or simple `main`-based smoke tests until test infra is added.
 
 ## Key files (refer to these directly)
@@ -55,5 +63,6 @@ Note: a built binary has been observed in `build/StockPriceSimulator` (sometimes
 - `include/Stock.hpp` / `src/Stock.cpp` — Stock JSON construction and parameter update
 - `include/ParameterEst.hpp` / `src/ParameterEst.cpp` — estimator logic (watch the log-return calculation)
 - `CMakeLists.txt` — build + FetchContent for `nlohmann::json`
+- `python/datavis.py` — simple visualization helper (depends on matplotlib/pandas)
 
-If any section is unclear or you want me to expand examples (e.g., a small deterministic test harness or an example patch to accept a CLI seed/path), tell me which part to expand.
+If any section is unclear or you want me to expand examples (e.g., a small deterministic test harness, a reproducible seed flag, or a richer Python plotting notebook), tell me which part to expand.

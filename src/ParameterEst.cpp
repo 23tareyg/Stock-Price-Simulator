@@ -19,7 +19,7 @@ std::pair<double, double> ParameterEstimator::estimateMuSigma() {
     std::vector<double> log_returns;
     for (int i = 1; i < prices.size(); i++) {
         if (prices[i] <= 0 || prices[i-1] <= 0) throw std::invalid_argument("Prices cannot be below zero");
-        log_returns.push_back(std::log(prices[i]) / std::log(prices[i-1]));
+        log_returns.push_back(std::log(prices[i]) - std::log(prices[i-1]));
     }
 
     double mean_return = computeMean(log_returns);

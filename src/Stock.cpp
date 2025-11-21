@@ -4,6 +4,8 @@
 
 Stock::Stock() : name("N/A"), price(-1), mu(0.0), sigma(0.0) {}
 
+Stock::Stock(std::string name, double price, double mu, double sigma) : name(name), price(price), mu(mu), sigma(sigma) {}
+
 Stock::Stock(const json& stock) {
     name = stock["name"];
     price = stock["price"];

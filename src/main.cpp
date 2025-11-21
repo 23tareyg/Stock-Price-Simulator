@@ -47,19 +47,19 @@ int main() {
     int timestep = static_cast<int>(data["timestep_minutes"]);
     TimeUnit t = TimeUnit::HOURS;
 
-    monteCarloSim("GBM", test_stock, duration, timestep, t, "../output/GBM", 10);
+    // monteCarloSim("GBM", test_stock, duration, timestep, t, "../output/GBM", 10);
 
-    /*auto model = PriceModel::createModel("GBM", test_stock, duration, timestep, t);
+    auto model = PriceModel::createModel("GBM", test_stock, duration, timestep, t);
     model->simulate(prng);
-    model->print_data();*/
+    model->print_data();
 
 
-    std::vector<double> hist_prices = {100.0, 100.01, 100.03, 100.02};  // Example data
+    /*std::vector<double> hist_prices = {100.0, 100.01, 100.03, 100.02};  // Example data
     ParameterEstimator estimator(hist_prices);
     std::pair<double, double> res = estimator.estimateMuSigma();
     double mu = res.first;
     double sigma = res.second;
-    std::cout << mu << ", " << sigma << '\n';
+    std::cout << mu << ", " << sigma << '\n';*/
 
     return 0;
 }

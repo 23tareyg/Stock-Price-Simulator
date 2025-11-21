@@ -16,6 +16,7 @@ double ParameterEstimator::computeStdDev(const std::vector<double>& data, double
 }
 
 std::pair<double, double> ParameterEstimator::estimateMuSigma() {
+    // compute log returns
     std::vector<double> log_returns;
     for (int i = 1; i < prices.size(); i++) {
         if (prices[i] <= 0 || prices[i-1] <= 0) throw std::invalid_argument("Prices cannot be below zero");

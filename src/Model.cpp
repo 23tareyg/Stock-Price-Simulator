@@ -33,10 +33,18 @@ std::unique_ptr<PriceModel> PriceModel::createModel(const std::string& type, std
 
 PriceModel::~PriceModel() = default;
 
+std::vector<double> PriceModel::getPriceSeries() const {
+    std::vector<double> out;
+    out.reserve(stockData.size());
+    for (const auto &p : stockData) out.push_back(p.second);
+    return out;
+}
+
 
 // GBM Class
 GBMModel::GBMModel(std::shared_ptr<Stock> s, int dur_unit, int tstep, TimeUnit t) : 
     stock(std::move(s)), duration(dur_unit), timestep(tstep), unit(t) {
+    // initialize normalize unit based on time step
     switch (t) {
         case (TimeUnit::SECONDS):
             normalize = (252.0 * 6.5 * 60.0 * 60.0);

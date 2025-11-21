@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <vector>
 #include <random>
 #include <cmath>
 #include <chrono>
@@ -28,6 +29,8 @@ public:
 
     virtual void print_data();
     static std::unique_ptr<PriceModel> createModel(const std::string& type, std::shared_ptr<Stock> stock, int dur, int t, TimeUnit unit);
+    // return the sequence of simulated prices
+    std::vector<double> getPriceSeries() const;
     virtual void reset();
     virtual void exportToCSV(std::string& filename);
 
@@ -50,7 +53,7 @@ private:
     std::shared_ptr<Stock> stock;
     int duration;
     int timestep;
-    TimeUnit unit;
+    TimeUnit unit = TimeUnit::DAYS;
     double normalize = 252; // standard value is days
 
 public:

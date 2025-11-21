@@ -5,7 +5,6 @@
 
 #include <nlohmann/json.hpp>
 
-
 #include "Stock.hpp"
 #include "Model.hpp"
 #include "ParameterEst.hpp"
@@ -52,6 +51,8 @@ int main() {
     auto model = PriceModel::createModel("GBM", test_stock, duration, timestep, t);
     model->simulate(prng);
     model->print_data();
+
+
 
 
     /*std::vector<double> hist_prices = {100.0, 100.01, 100.03, 100.02};  // Example data

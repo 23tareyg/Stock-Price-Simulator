@@ -20,7 +20,7 @@ py::array_t<double> run_simulations(const std::string &modelType, std::shared_pt
 
     std::vector<double> result;
     result.reserve((size_t)num_iterations * steps);
-    result = MC_Sim(modelType, stock, duration, timestep, timeUnitInt, num_iterations);
+    result = MC_Sim_threaded(modelType, stock, duration, timestep, timeUnitInt, num_iterations);
 
     // create 2d numpy array (num_iterations, steps)
     py::array_t<double> arr({(size_t)num_iterations, (size_t)steps});

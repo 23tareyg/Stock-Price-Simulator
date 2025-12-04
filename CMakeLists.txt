@@ -24,6 +24,17 @@ add_executable(StockPriceSimulator
     src/ParameterEst.cpp
 )
 
+
+add_executable(MonteCarloBenchmark
+    src/montecarlo_benchmark.cpp
+    src/Model.cpp
+    src/Stock.cpp
+    src/ParameterEst.cpp
+)
+
+target_include_directories(MonteCarloBenchmark PRIVATE include)
+target_link_libraries(MonteCarloBenchmark PRIVATE nlohmann_json::nlohmann_json)
+
 target_include_directories(StockPriceSimulator PRIVATE include)
 
 target_link_libraries(StockPriceSimulator PRIVATE 

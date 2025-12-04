@@ -1,11 +1,9 @@
+#pragma once
 #include <thread>
-#include <vector>
-#include <random>
-#include <chrono>
 #include <algorithm>
-#include <iostream>
 #include "Model.hpp"
 #include "Stock.hpp"
+
 std::vector<double> MC_Sim(const std::string &modelType, std::shared_ptr<Stock> stock,
     int duration, int timestep, int timeUnitInt, int num_iterations, unsigned seed = 0) {
 

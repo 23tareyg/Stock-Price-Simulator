@@ -14,7 +14,7 @@ int main() {
     j["sigma"] = 0.2;
 
     auto stock = std::make_shared<Stock>(j);
-    int duration = 60;
+    int duration = 100;
     int timestep = 1;
     int timeUnitInt = static_cast<int>(TimeUnit::HOURS);
     int iterations = 100;

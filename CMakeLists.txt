@@ -30,6 +30,19 @@ target_link_libraries(StockPriceSimulator PRIVATE
     nlohmann_json::nlohmann_json 
 )
 
+add_executable(MonteCarloTest
+    src/montecarlo_test.cpp
+    src/Model.cpp
+    src/Stock.cpp
+    src/ParameterEst.cpp
+)
+
+target_include_directories(MonteCarloTest PRIVATE include)
+target_link_libraries(MonteCarloTest PRIVATE nlohmann_json::nlohmann_json)
+
+enable_testing()
+add_test(NAME MonteCarloTest COMMAND MonteCarloTest)
+
 pybind11_add_module(pystock
     src/pybindings.cpp
     src/Model.cpp

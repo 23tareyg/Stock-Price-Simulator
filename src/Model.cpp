@@ -31,14 +31,15 @@ std::unique_ptr<PriceModel> PriceModel::createModel(const std::string& type, std
     throw std::invalid_argument("Invalid model type");
 }
 
-PriceModel::~PriceModel() = default;
-
 std::vector<double> PriceModel::getPriceSeries() const {
     std::vector<double> out;
     out.reserve(stockData.size());
     for (const auto &p : stockData) out.push_back(p.second);
     return out;
 }
+
+PriceModel::~PriceModel() = default;
+
 
 
 // GBM Class

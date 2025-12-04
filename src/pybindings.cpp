@@ -4,6 +4,7 @@
 
 #include "Model.hpp"
 #include "Stock.hpp"
+#include "MonteCarlo.hpp"
 
 #include <nlohmann/json.hpp>
 #include <random>
@@ -15,37 +16,18 @@ using json = nlohmann::json;
 py::array_t<double> run_simulations(const std::string &modelType, std::shared_ptr<Stock> stock,
         int duration, int timestep, int timeUnitInt, int num_iterations) {
 
-    // create a prototype model to determine number of steps
-    TimeUnit unit = static_cast<TimeUnit>(timeUnitInt);
-    auto proto = PriceModel::createModel(modelType, stock, duration, timestep, unit);
     int steps = static_cast<int>(duration / timestep) + 1; // include initial
 
-    // result array can be preallocated
     std::vector<double> result;
     result.reserve((size_t)num_iterations * steps);
-
-    unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
-    std::mt19937 orig_prng(seed1);
-
-    for (int i = 0; i < num_iterations; i++) {
-        // copy prng and advance so runs differ
-        auto prng = orig_prng;
-        prng.discard(1000 + i);
-
-        auto model = PriceModel::createModel(modelType, stock, duration, timestep, unit);
-        model->simulate(prng);
-
-        // collect prices from model
-        auto prices = model->getPriceSeries();
-        for (double v : prices) result.push_back(v);
-    }
+    result = MC_Sim(modelType, stock, duration, timestep, timeUnitInt, num_iterations);
 
     // create 2d numpy array (num_iterations, steps)
     py::array_t<double> arr({(size_t)num_iterations, (size_t)steps});
     auto buf = arr.mutable_unchecked<2>();
 
-    for (int i = 0; i < num_iterations; ++i) {
-        for (int j = 0; j < steps; ++j) {
+    for (int i = 0; i < num_iterations; i++) {
+        for (int j = 0; j < steps; j++) {
             buf(i, j) = result[(size_t)i * steps + j];
         }
     }
@@ -63,15 +45,18 @@ std::unique_ptr<PriceModel> create_model(const std::string& type, std::shared_pt
 PYBIND11_MODULE(pystock, m) {
     m.doc() = "pybind11 bindings for StockPriceSimulator";
 
+    // create stock object
     py::class_<Stock, std::shared_ptr<Stock>>(m, "Stock")
         .def(py::init([](const std::string name, double price, double mu, double sigma) {
             return std::make_shared<Stock>(name, price, mu, sigma);
         }), py::arg("name"), py::arg("price"), py::arg("mu"), py::arg("sigma"));
 
+    // run monte carlo sim
     m.def("run_simulations", &run_simulations, "Run Monte Carlo simulations and return a NumPy array",
         py::arg("modelType"), py::arg("stock_dict"), py::arg("duration"), py::arg("timestep"), 
         py::arg("timeUnitInt"), py::arg("num_iterations"));
     
+    // create model
     m.def("create_model", &create_model, "Create a stock prediction model",
         py::arg("type"), py::arg("stock"), py::arg("dur"), py::arg("t"), py::arg("unit"));
 }

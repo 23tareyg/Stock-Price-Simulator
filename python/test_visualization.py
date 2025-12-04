@@ -25,13 +25,13 @@ timestep = 1
 TIMEUNIT_HOURS = 2
 NUM_ITER = 1000
 
-print(f"Running {NUM_ITER} simulations (model=GBM) with duration={duration} timestep={timestep}...")
+print(f"Running {NUM_ITER} simulations (model=GBM) with duration={duration}, timestep={timestep}...")
 
 test_stock = pystock.Stock("AAPL", 150, 0.1, 0.2)
 arr = pystock.run_simulations("GBM", test_stock, duration, timestep, TIMEUNIT_HOURS, NUM_ITER)
 # arr should be shape (NUM_ITER, steps)
-import numpy as _np
-arr = _np.array(arr)
+
+arr = np.array(arr)
 
 # Plot
 sns.set_theme(style="darkgrid")

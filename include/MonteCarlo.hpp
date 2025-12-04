@@ -56,13 +56,14 @@ std::vector<double> MC_Sim_threaded(const std::string &modelType, std::shared_pt
     auto proto = PriceModel::createModel(modelType, stock, duration, timestep, unit);
     int steps = static_cast<int>(duration / timestep) + 1; // include initial
 
-    // result array preallocated and sized so worker threads can write into disjoint ranges
+    //result array preallocated
     std::vector<double> result((size_t)num_iterations * steps);
 
     unsigned seed1 = seed ? seed : std::chrono::system_clock::now().time_since_epoch().count();
 
     unsigned hwthreads = std::thread::hardware_concurrency();
     unsigned num_threads = std::max(1u, hwthreads);
+    num_threads = std::min(num_threads, (unsigned)num_iterations);
 
     std::vector<std::thread> threads;
     threads.reserve(num_threads);

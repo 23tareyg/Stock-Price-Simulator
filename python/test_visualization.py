@@ -28,7 +28,6 @@ print(f"Running {NUM_ITER} simulations (model=GBM) with duration={duration}, tim
 
 test_stock = pystock.Stock("AAPL", 150, 0.1, 0.2)
 arr = pystock.run_simulations("GBM", test_stock, duration, timestep, TIMEUNIT_HOURS, NUM_ITER)
-# arr should be shape (NUM_ITER, steps)
 
 arr = np.array(arr)
 

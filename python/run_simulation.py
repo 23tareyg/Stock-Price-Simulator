@@ -5,6 +5,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# Helper function to get unit
+def getUnit(num):
+    if (num == 0): return "second(s)"
+    if (num == 1): return "minute(s)"
+    if (num == 2): return "hour(s)"
+    if (num == 3): return "day(s)"
+    else: return "NA"
+
 # Ensure we can import the compiled module in build/
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 BUILD_DIR = os.path.normpath(os.path.join(SCRIPT_DIR, "..", "build"))
@@ -20,15 +28,24 @@ except Exception as e:
 duration = 100
 timestep = 1
 
-# Map TimeUnit: 0=SECONDS,1=MINUTES,2=HOURS,3=DAYS (matches C++ enum order)
-TIMEUNIT_HOURS = 2
+# Map TimeUnit: 0=SECONDS, 1=MINUTES, 2=HOURS, 3 DAYS
+TIMEUNIT = 0
 NUM_ITER = 1000
 
-print(f"Running {NUM_ITER} simulations (model=GBM) with duration={duration}, timestep={timestep}...")
+# Prompt user for Stock parameters
+ticker = input("Enter stock ticker: ").strip()
+price = float(input("Enter initial stock price: "))
+mu = float(input("Enter drift parameter: "))
+sigma = float(input("Enter volatility parameter: "))
+print("-" * 50)
 
-test_stock = pystock.Stock("AAPL", 150, 0.1, 0.2)
-arr = pystock.run_simulations("GBM", test_stock, duration, timestep, TIMEUNIT_HOURS, NUM_ITER)
+print(f"Running {NUM_ITER} simulations (model=GBM) with duration = {duration}, timestep = {timestep} {getUnit(TIMEUNIT)}...")
 
+# Create and run simulation, and store in arr
+test_stock = pystock.Stock(ticker, price, mu, sigma)
+arr = pystock.run_simulations("GBM", test_stock, duration, timestep, TIMEUNIT, NUM_ITER)
+
+# Convert to numpy array
 arr = np.array(arr)
 
 # Plot
@@ -53,7 +70,8 @@ plt.tight_layout()
 
 OUT_DIR = os.path.normpath(os.path.join(SCRIPT_DIR, "..", "output", "GBM"))
 os.makedirs(OUT_DIR, exist_ok=True)
-outpath = os.path.join(OUT_DIR, f"pystock_gbm_{NUM_ITER}.png")
+outpath = os.path.join(OUT_DIR, f"pystock_gbm_{ticker}_{NUM_ITER}.png")
 plt.savefig(outpath, dpi=150)
 print("Saved plot to", outpath)
 plt.show()
+

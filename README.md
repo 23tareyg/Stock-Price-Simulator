@@ -2,9 +2,7 @@
 
 [![C++](https://img.shields.io/badge/C++-17-blue.svg)](https://isocpp.org/)
 
-> A modern C++ application for simulating stock price paths using stochastic models like **Geometric Brownian Motion (GBM)** and **Arithmetic Brownian Motion (ABM)**. Estimates parameters from historical data and supports extensible design for additional models.
-
-![Simulation Output Example](output/GBM/pystock_gbm_AAPL_1000.png)
+![Simulation Output Example](github_images/pystock_gbm_AAPL_1000.png)
 
 ## Overview
 This project implements a stock price simulator in C++. It currently supports GBM and ABM and simulates future price paths at customizable timesteps (seconds to days). The C++ core is exposed to Python via pybind11 bindings, which allows faster Monte Carlo simulations utilizing C++ multithreading and also visualization with Python's matplotlib.
@@ -13,7 +11,7 @@ I am working on improving the program so that the GBM/ABM parameters can be calc
 
 ## Key Features
 - **Multiple Stochastic Models**: Geometric Brownian Motion (GBM) and Arithmetic Brownian Motion (ABM) with correct time-scaling.
-- **Polymorphic Design**: Base `PriceModel` class with factory pattern for easy model switching and extension.
+- **Polymorphic Design**: Different models are derived from base class `PriceModel`
 - **Flexible Simulation**: Configurable duration, timestep, and time units.
 - **Python Bindings**: C++ core exposed to Python via pybind11 for easy scripting and integration.
 - **Monte Carlo Simulation**: Run thousands of simulations with multithreaded execution for performance.
@@ -52,7 +50,7 @@ I am working on improving the program so that the GBM/ABM parameters can be calc
    ```bash
    cd python
    python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   source venv/bin/activate
    pip install -r requirements.txt
    ```
 

@@ -54,7 +54,6 @@ int main() {
 
 
 
-
     /*std::vector<double> hist_prices = {100.0, 100.01, 100.03, 100.02};  // Example data
     ParameterEstimator estimator(hist_prices);
     std::pair<double, double> res = estimator.estimateMuSigma();

@@ -17,12 +17,27 @@ I am working on improving the program so that the GBM/ABM parameters can be calc
 - **Monte Carlo Simulation**: Run thousands of simulations with multithreaded execution for performance.
 - **Visualization**: Interactive plotting with matplotlib/seaborn to visualize price paths and statistical distributions. 
 
+
+
 ## Technologies Used
 - **Language**: C++17, Python 3
 - **C++ Libraries**: Standard Library, pybind11, nlohmann/json
 - **Python Libraries**: NumPy, Matplotlib, Seaborn
 - **Build System**: CMake
 - **Concurrency**: C++ `<thread>` for parallel Monte Carlo execution
+
+## Performance
+
+Monte Carlo simulation speedup comparison between single-threaded and multi-threaded execution:
+
+| Simulations | Single Thread (s) | Multi Thread (s) |
+|:------------|------------------:|-----------------:|
+| 100       | 0.00121 | 0.000513 |
+| 1,000      | 0.0124 | 0.0017 |
+| 10,000     | 0.181 | 0.033 |
+| 100,000   | 12.11 | 2.66 |
+
+> **Hardware:** Apple Mac Mini (base model)  
 
 ## Quick Start
 
